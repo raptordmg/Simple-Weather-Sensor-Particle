@@ -6,8 +6,8 @@
 DHT dht(DHTPIN, DHTTYPE);
 int analogPin = A1;
 double temperature = 0;
-double maxTemp = -100;
-double minTemp = 100;
+double maxTemp = NULL;
+double minTemp = NULL;
 double humidity = 0;
 int light = 0;
 bool isDay = true;
@@ -22,7 +22,6 @@ int readSensors(String Command){
 
 void setup() {
     dht.begin();
-
     Particle.variable("maxTemp", maxTemp);
     Particle.variable("minTemp", minTemp);
     Particle.variable("isDay", isDay);
@@ -35,11 +34,16 @@ void loop() {
     
     if (timeCheck + 86400000 < millis()){
         timeCheck = millis();
-        minTemp = 100;
-        maxTemp = -100;
+        minTemp = NULL;
+        maxTemp = NULL;
     }
     
     readSensors("");
+    
+    if (temperature || humidity == NULL){
+        maxTemp = temperature;
+        minTemp = temperature;
+    }
     
     if (temperature > maxTemp) {
         maxTemp = temperature;
@@ -59,3 +63,4 @@ void loop() {
     
     delay(60000);
 }
+0
